@@ -5,27 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.alibaba.fastjson.JSONObject;
 import com.xnx3.BaseVO;
 import com.xnx3.Log;
 import com.xnx3.StringUtil;
-
 import cn.zvo.http.Http;
-import cn.zvo.http.Https;
 import cn.zvo.http.Response;
 import cn.zvo.translate.api.vo.TranslateResultVO;
 import cn.zvo.translate.core.LanguageEnum;
@@ -94,7 +81,6 @@ public class TranslateController{
 		try {
 			res = GoogleTranslateUtil.trans(url, payload.toString(), null, null, null);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			vo.setBaseVO(BaseVO.FAILURE, e.getMessage());
 			return vo;

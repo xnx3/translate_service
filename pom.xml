@@ -121,19 +121,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-	
-		<!-- 文件上传相关的核心支持，是必须有的 -->
-		<dependency> 
-			<groupId>cn.zvo.log</groupId>
-			<artifactId>log-core</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<!-- 在 SpringBoot 框架中的快速使用。 （在不同的框架中使用，这里引入的framework.xxx也不同） -->
-		<!-- <dependency> 
-			<groupId>cn.zvo.log</groupId>
-			<artifactId>log-framework-springboot</artifactId>
-			<version>1.0</version>
-		</dependency>    -->
 		
 		<!-- http/https请求工具 https://github.com/xnx3/http.java -->
 		<dependency> 
@@ -177,18 +164,13 @@
 		  <scope>provided</scope>
 		</dependency>
 		
-		
-		     <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
-        <version>4.5.10</version>
-     </dependency>
-     <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>fastjson</artifactId>
-        <version>1.1.32</version>
-    </dependency>
-
+		<!-- javadoc -->
+		<dependency>
+		  <groupId>com.xnx3.doc.javadoc</groupId>
+		  <artifactId>javadoc</artifactId>
+		  <version>1.10</version>
+		  <scope>provided</scope>
+		</dependency>
 
 	</dependencies>
 
