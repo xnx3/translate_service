@@ -8,6 +8,8 @@ import com.xnx3.BaseVO;
 
 import cn.zvo.http.Http;
 import cn.zvo.http.Response;
+import cn.zvo.translate.api.vo.bean.LanguageBean;
+import cn.zvo.translate.core.LanguageEnum;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -48,6 +50,30 @@ public class GoogleTranslateUtil {
 		
 		return res;
 	}
+	
+	/**
+	 * 将雷鸣云翻译的语言标识转换为google的语言标识
+	 * @param currentLanguage 传入雷鸣翻译的语言标识，传入如 chinese_simplified
+	 * @return 返回google使用的语言标识，返回如 zh-CN 另外如果未匹配到，则返回空字符串
+	 */
+	public static String languageConvert(String currentLanguage) {
+		LanguageEnum[] languages = LanguageEnum.values();
+        
+		if(currentLanguage.equalsIgnoreCase(LanguageEnum.CHINESE_SIMPLIFIED.id)) {
+			return "zh-CN";
+		}else if(currentLanguage.equalsIgnoreCase(LanguageEnum.CHINESE_TRADITIONAL.id)) {
+			return "zh-TW";
+		}else if(currentLanguage.equalsIgnoreCase(LanguageEnum.ENGLISH.id)) {
+			return "en";
+		}else if(currentLanguage.equalsIgnoreCase(LanguageEnum.KOREAN.id)) {
+			return "ko";
+		}else if(currentLanguage.equalsIgnoreCase(LanguageEnum.RUSSIAN.id)) {
+			return "ru";
+		}else {
+			return "";
+		}
+	}
+	
 	
 	public static void main(String[] args) throws IOException {
 		String url = "https://api.translate.zvo.cn/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl=zh-CN&tl=en&sp=nmt&tc=1&sr=1&tk=&mode=1";

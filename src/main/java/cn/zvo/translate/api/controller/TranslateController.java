@@ -1,7 +1,9 @@
 package cn.zvo.translate.api.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,9 @@ import com.xnx3.Log;
 import com.xnx3.StringUtil;
 import cn.zvo.http.Http;
 import cn.zvo.http.Response;
+import cn.zvo.translate.api.vo.LanguageListVO;
 import cn.zvo.translate.api.vo.TranslateResultVO;
+import cn.zvo.translate.api.vo.bean.LanguageBean;
 import cn.zvo.translate.core.LanguageEnum;
 import cn.zvo.translate.core.util.GoogleTranslateUtil;
 import net.sf.json.JSONArray;
@@ -30,18 +34,43 @@ import net.sf.json.JSONArray;
 public class TranslateController{
 	
 	/**
-	 * 翻译操作
+	 * 当前支持的语言
+	 * @return 支持的语言列表
+	 * @author 管雷鸣
+	 */
+	@ResponseBody
+	@RequestMapping(value="language.json", method = RequestMethod.POST)
+	public LanguageListVO language(HttpServletRequest request) {
+		LanguageListVO vo = new LanguageListVO();
+		
+		List<LanguageBean> list = new ArrayList<LanguageBean>();
+		LanguageEnum[] languages = LanguageEnum.values();
+        for (int i = 0; i < languages.length; i++) {
+        	LanguageBean bean = new LanguageBean();
+        	bean.setId(languages[i].id);
+        	bean.setName(languages[i].name);
+        	list.add(bean);
+        }
+        vo.setList(list);
+		
+		return vo;
+	}
+	
+	/**
+	 * 执行翻译操作
 	 * @param from 将什么语言进行转换。<required> 传入如 chinese_simplified 具体可传入有：
 	 * 			<ul>
 	 * 				<li>chinese_simplified : 简体中文</li>
 	 * 				<li>chinese_traditional : 繁體中文</li>
 	 * 				<li>english : English</li>
+	 * 				<li>更多参见：<a href="language.json.html" target="_black">language.json</a></li>
 	 * 			</ul>
 	 * @param to 转换为什么语言输出。<required> 传入如 english 具体可传入有：
 	 * 			<ul>
 	 * 				<li>chinese_simplified : 简体中文</li>
 	 * 				<li>chinese_traditional : 繁體中文</li>
 	 * 				<li>english : English</li>
+	 * 				<li>更多参见：<a href="language.json.html" target="_black">language.json</a></li>
 	 * 			</ul>
 	 * @param text 转换的语言json数组，格式如 ["你好","探索星辰大海"] <required> <example=[&quot;你好&quot;,&quot;探索星辰大海&quot;]>
 	 * @return 翻译结果
@@ -63,8 +92,9 @@ public class TranslateController{
 		vo.setFrom(from);
 		vo.setTo(to);
 		
-//		String url = "https://translate.googleapis.com/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl=zh-CN&tl=en&sp=nmt&tc=1&sr=1&tk=&mode=1";
-		String url = "https://api.translate.zvo.cn/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl=zh-CN&tl=en&sp=nmt&tc=1&sr=1&tk=&mode=1";
+		String sl = GoogleTranslateUtil.languageConvert(from);
+		String tl = GoogleTranslateUtil.languageConvert(to);
+		String url = "https://translate.googleapis.com/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+sl+"&tl="+tl+"&sp=nmt&tc=1&sr=1&tk=&mode=1";
 		
 		JSONArray array = JSONArray.fromObject(text);
 		StringBuffer payload = new StringBuffer();
