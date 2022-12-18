@@ -9,9 +9,10 @@ import net.sf.json.JSONArray;
  *
  */
 public class TranslateResultVO extends BaseVO{
-	private String from;
-	private String to;
-	private JSONArray text;
+	private String from; //将什么语言进行转换
+	private String to;  //转换为什么语言输出
+	private JSONArray text;	//转换的结果的json数组。<br/>跟传入的数组一一对应
+	
 	public String getFrom() {
 		return from;
 	}

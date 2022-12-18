@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.xnx3.BaseVO;
@@ -21,35 +21,38 @@ import net.sf.json.JSONArray;
 
 /**
  * 
- * 对外开放的翻译接口
+ * 翻译接口
  * @author 管雷鸣
  *
  */
 @Controller
 @RequestMapping("/")
 public class TranslateController{
-	/**
-	 * 首页
-	 */
-	@ResponseBody
-	@RequestMapping("/index.html")
-	public String index(HttpServletRequest request){
-		return "welcome use translate.js";
-	}
 	
 	/**
-	 * 
-	 * @param from 将什么语言进行转换
-	 * @param to 转换为什么语言输出
-	 * @param text 转换的语言json数组，格式如 ["hello","word"]
-	 * @return
+	 * 翻译操作
+	 * @param from 将什么语言进行转换。<required> 传入如 chinese_simplified 具体可传入有：
+	 * 			<ul>
+	 * 				<li>chinese_simplified : 简体中文</li>
+	 * 				<li>chinese_traditional : 繁體中文</li>
+	 * 				<li>english : English</li>
+	 * 			</ul>
+	 * @param to 转换为什么语言输出。<required> 传入如 english 具体可传入有：
+	 * 			<ul>
+	 * 				<li>chinese_simplified : 简体中文</li>
+	 * 				<li>chinese_traditional : 繁體中文</li>
+	 * 				<li>english : English</li>
+	 * 			</ul>
+	 * @param text 转换的语言json数组，格式如 ["你好","探索星辰大海"] <required> <example=[&quot;你好&quot;,&quot;探索星辰大海&quot;]>
+	 * @return 翻译结果
+	 * @author 管雷鸣
 	 */
 	@ResponseBody
-	@RequestMapping("translate.json")
-	public TranslateResultVO translate(HttpServletRequest request, HttpServletResponse response, 
-			@RequestParam(value = "from") String from,
-			@RequestParam(value = "to") String to,
-			@RequestParam(value = "text") String text){
+	@RequestMapping(value="translate.json", method = RequestMethod.POST)
+	public TranslateResultVO translate(HttpServletRequest request,
+			@RequestParam(value = "from", defaultValue = "chinese_simplified") String from,
+			@RequestParam(value = "to", defaultValue = "english") String to,
+			@RequestParam(value = "text", defaultValue = "") String text){
 		TranslateResultVO vo = new TranslateResultVO();
 		
 		if(text == null || text.length() == 0) {
@@ -60,7 +63,8 @@ public class TranslateController{
 		vo.setFrom(from);
 		vo.setTo(to);
 		
-		String url = "https://translate.googleapis.com/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl=zh-CN&tl=en&sp=nmt&tc=1&sr=1&tk=&mode=1";
+//		String url = "https://translate.googleapis.com/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl=zh-CN&tl=en&sp=nmt&tc=1&sr=1&tk=&mode=1";
+		String url = "https://api.translate.zvo.cn/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl=zh-CN&tl=en&sp=nmt&tc=1&sr=1&tk=&mode=1";
 		
 		JSONArray array = JSONArray.fromObject(text);
 		StringBuffer payload = new StringBuffer();
