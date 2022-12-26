@@ -94,7 +94,10 @@ public class TranslateController{
 		
 		String sl = GoogleTranslateUtil.languageConvert(from);
 		String tl = GoogleTranslateUtil.languageConvert(to);
-		String url = "https://translate.googleapis.com/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+sl+"&tl="+tl+"&sp=nmt&tc=1&sr=1&tk=&mode=1";
+		String domain = "translate.googleapis.com";
+//		domain = "api.translate.zvo.cn";	//本地调试用
+		String url = "https://"+domain+"/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+sl+"&tl="+tl+"&sp=nmt&tc=1&sr=1&tk=&mode=1";
+		
 		
 		JSONArray array = JSONArray.fromObject(text);
 		StringBuffer payload = new StringBuffer();
@@ -121,11 +124,14 @@ public class TranslateController{
 		}
 		Log.debug(res.getContent());
 		
+		//对结果中不合适的地方进行替换
+		res = GoogleTranslateUtil.responseReplace(res);
+		
 		//判断结果，输出
 		if(res.getCode() == 200) {
 			vo.setText(JSONArray.fromObject(res.getContent()));
 		}else {
-			vo.setBaseVO(BaseVO.FAILURE, res.getContent());
+			vo.setBaseVO(BaseVO.FAILURE, "error code : "+res.getCode());
 		}
 		
 		return vo;

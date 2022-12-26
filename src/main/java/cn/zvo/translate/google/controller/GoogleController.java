@@ -39,7 +39,7 @@ public class GoogleController{
 	@ResponseBody
 	@RequestMapping("/t")
 	public String index(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		response.addHeader("Access-Control-Allow-Origin", "*"); //允许跨域
+//		response.addHeader("Access-Control-Allow-Origin", "*"); //允许跨域
 		
 //		System.out.println("----------");
 		String payload = getRequestData(request);
@@ -71,7 +71,7 @@ public class GoogleController{
 //		System.out.println(JSONObject.fromObject(headers));
 		
 		Response res = GoogleTranslateUtil.trans(url, payload, request.getHeader("user-agent"), request.getHeader("accept-language"), request.getHeader("content-length"));
-		Log.debug(res.getContent());
+		//Log.debug(res.getContent());
         
 		return res.getContent();
 	}
