@@ -83,14 +83,14 @@ public class TranslateController{
 			@RequestParam(value = "to", defaultValue = "english") String to,
 			@RequestParam(value = "text", defaultValue = "") String text){
 		TranslateResultVO vo = new TranslateResultVO();
+		vo.setFrom(from);
+		vo.setTo(to);
 		
 		if(text == null || text.length() == 0) {
 			vo.setBaseVO(BaseVO.FAILURE, "请传入 text 值");
 			return vo;
 		}
 		
-		vo.setFrom(from);
-		vo.setTo(to);
 		
 		String sl = GoogleTranslateUtil.languageConvert(from);
 		String tl = GoogleTranslateUtil.languageConvert(to);
