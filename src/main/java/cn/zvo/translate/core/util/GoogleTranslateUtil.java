@@ -81,8 +81,8 @@ public class GoogleTranslateUtil {
 			return "en";
 		}else if(currentLanguage.equalsIgnoreCase(LanguageEnum.KOREAN.id)) {
 			return "ko";
-		}else if(currentLanguage.equalsIgnoreCase(LanguageEnum.RUSSIAN.id)) {
-			return "ru";
+//		}else if(currentLanguage.equalsIgnoreCase(LanguageEnum.RUSSIAN.id)) {
+//			return "ru";
 		}else {
 			return "";
 		}

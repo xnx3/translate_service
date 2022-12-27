@@ -9,8 +9,8 @@ public enum LanguageEnum {
 	ENGLISH("english", "English"),
 	CHINESE_SIMPLIFIED("chinese_simplified", "简体中文"),
 	CHINESE_TRADITIONAL("chinese_traditional", "繁體中文"),
-	KOREAN("korean", "한국어"),
-	RUSSIAN("russian","Русский язык");	//俄语
+	KOREAN("korean", "한국어");
+//	RUSSIAN("russian","Русский язык");	//俄语
 	
 	
 	public final String id;		//语言名，如 english、chinese_simplified、chinese_traditional
