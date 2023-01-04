@@ -110,9 +110,21 @@ public class GoogleTranslateUtil {
     		//遍历 &#39; 的问题
     		for (int i = 0; i < array.size(); i++) {
 				if(array.getString(i).indexOf("&#39;") > -1) {
-					//存在&amp;标签，过滤，将其替换为 &
+					//存在，过滤，将其替换
 					String text = array.getString(i);
 					text = text.replaceAll("&#39;", "'");
+					array.set(i, text);
+					
+					update = true;
+				}
+			}
+    		
+    		//遍历 &amp; 的问题
+    		for (int i = 0; i < array.size(); i++) {
+				if(array.getString(i).indexOf("&amp;") > -1) {
+					//存在，过滤，将其替换
+					String text = array.getString(i);
+					text = text.replaceAll("&amp;", "&");
 					array.set(i, text);
 					
 					update = true;
