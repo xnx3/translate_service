@@ -151,6 +151,12 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>com.xnx3.util</groupId>
+			<artifactId>xnx3-util</artifactId>
+			<version>1.13</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>com.xnx3.json</groupId>
 			<artifactId>json</artifactId>
 			<version>1.0</version>
