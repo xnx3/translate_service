@@ -2,7 +2,9 @@ package cn.zvo.translate.core.util;
 
 import org.lionsoul.ip2region.xdb.Searcher;
 import com.xnx3.BaseVO;
+import com.xnx3.Log;
 import com.xnx3.StringUtil;
+import com.xnx3.SystemUtil;
 import cn.zvo.translate.core.LanguageEnum;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +19,9 @@ public class IpUtil{
 	
 	public static Searcher getSearcher() {
 		if(searcher == null) {
+			String dbPath = getProjectPath()+"WEB-INF/lib/ip2region.xdb";
+			System.out.println(dbPath);
+			
 			// 1、从 dbPath 中预先加载 VectorIndex 缓存，并且把这个得到的数据作为全局变量，后续反复使用。
 	        byte[] vIndex;
 	        try {
@@ -115,4 +120,20 @@ public class IpUtil{
         // 备注：每个线程需要单独创建一个独立的 Searcher 对象，但是都共享全局的制度 vIndex 缓存。
     }
 	
+	
+	private static String projectPath;
+	/**
+	 * 当前项目再硬盘的路径，绝对路径。
+	 * <br/>返回格式如 /Users/apple/git/wangmarket/target/classes/  最后会加上 /
+	 * <br/>如果是在编辑器中开发时运行，返回的是 /Users/apple/git/wangmarket/target/classes/ 这种，最后是有 /target/classes/ 的
+	 * <br/>如果是在实际项目中运行，也就是在服务器的Tomcat中运行，返回的是 /mnt/tomcat8/webapps/ROOT/ 这样的，最后是结束到 ROOT/ 下
+	 */
+	public static String getProjectPath(){
+		if(projectPath == null){
+			String path = new IpUtil().getClass().getResource("/").getPath();
+			projectPath = path.replace("WEB-INF/classes/", "");
+			Log.info("projectPath : "+projectPath);
+		}
+		return projectPath;
+	}
 }

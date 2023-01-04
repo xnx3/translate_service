@@ -24,11 +24,16 @@ public class IpController{
 	 * 获取IP位置信息
 	 * @return 位置及其使用的语种
 	 * @author 管雷鸣
+	 * 注意，这个要放到服务器中才能用，本地测试会找不到ip2region.xdb
 	 */
 	@ResponseBody
 	@RequestMapping(value="ip.json", method = RequestMethod.POST)
 	public IpVO ip(HttpServletRequest request) {
 		String ip = getIpAddress(request);
+//		String ip = request.getRemoteAddr();
+//		System.out.println("ip:\t"+ip);
+//		System.out.println(request.getHeader("x-forwarded-for"));
+//		System.out.println(request.getHeader("host"));
 		IpVO vo = new IpVO();
 		
 		//不为空
