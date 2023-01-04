@@ -1,7 +1,7 @@
 wm.javadoc = {
 	name:'translate.js 接口文档',		//文档名字
-	outline:[{"author":null,"commentText":"翻译接口","urlPath":"/","apiList":[{"getApiUrl":"/language.json","methodName":"language","html":"language.json.html","commentText":"当前支持的语言","urlFile":"language.json"},{"getApiUrl":"/translate.json","methodName":"translate","html":"translate.json.html","commentText":"执行翻译操作","urlFile":"translate.json"}]}],	//大纲，菜单
-	version:'2.0',//版本号
+	outline:[{"author":null,"commentText":"ip接口","urlPath":"/","apiList":[{"getApiUrl":"/ip.json","methodName":"ip","html":"ip.json.html","commentText":"获取IP位置信息","urlFile":"ip.json"}]},{"author":null,"commentText":"翻译接口","urlPath":"/","apiList":[{"getApiUrl":"/language.json","methodName":"language","html":"language.json.html","commentText":"当前支持的语言","urlFile":"language.json"},{"getApiUrl":"/translate.json","methodName":"translate","html":"translate.json.html","commentText":"执行翻译操作","urlFile":"translate.json"}]}],	//大纲，菜单
+	version:'2.20230104',//版本号
 	default:{
 		domain:'https://api.translate.zvo.cn',	//默认的domain域名
 		token:''	//默认的token
