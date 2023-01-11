@@ -76,8 +76,8 @@ public class IpUtil{
 			return LanguageEnum.CHINESE_SIMPLIFIED.id;
 		}else if(country.equals("美国")) {
 			return LanguageEnum.ENGLISH.id;
-		}else if(country.equals("日本")) {
-			return LanguageEnum.JAPANESE.id;
+//		}else if(country.equals("日本")) {
+//			return LanguageEnum.JAPANESE.id;
 		}else if(country.equals("韩国")) {
 			return LanguageEnum.KOREAN.id;
 		}
