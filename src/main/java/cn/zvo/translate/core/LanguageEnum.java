@@ -9,8 +9,8 @@ public enum LanguageEnum {
 	ENGLISH("english", "English"),
 	CHINESE_SIMPLIFIED("chinese_simplified", "简体中文"),
 	CHINESE_TRADITIONAL("chinese_traditional", "繁體中文"),
-	KOREAN("korean", "한어"),
-	JAPANESE("japanese", "しろうと");
+	KOREAN("korean", "한어");
+//	JAPANESE("japanese", "しろうと");
 //	RUSSIAN("russian","Русский язык");	//俄语
 	
 	
