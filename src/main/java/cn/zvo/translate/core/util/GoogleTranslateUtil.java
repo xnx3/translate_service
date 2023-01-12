@@ -3,9 +3,7 @@ package cn.zvo.translate.core.util;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.xnx3.StringUtil;
-
 import cn.zvo.http.Http;
 import cn.zvo.http.Response;
 import cn.zvo.translate.core.LanguageEnum;

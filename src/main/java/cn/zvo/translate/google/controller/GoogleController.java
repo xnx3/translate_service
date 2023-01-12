@@ -14,8 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.xnx3.Log;
+import com.xnx3.MD5Util;
+
 import cn.zvo.http.Http;
 import cn.zvo.http.Response;
+import cn.zvo.log.framework.springboot.LogUtil;
+import cn.zvo.translate.core.util.CacheUtil;
 import cn.zvo.translate.core.util.GoogleTranslateUtil;
 
 /**
@@ -39,40 +43,41 @@ public class GoogleController{
 	@ResponseBody
 	@RequestMapping("/t")
 	public String t(HttpServletRequest request, HttpServletResponse response) throws IOException{
-//		response.addHeader("Access-Control-Allow-Origin", "*"); //允许跨域
-		
-//		System.out.println("----------");
 		String payload = getRequestData(request);
 		if(payload == null || payload.length() == 0) {
 			return "翻译的内容为空";
 		}
+		
+		//日志
 		String referer = request.getHeader("referer"); 
-		Log.debug("referer:"+referer+"\tlength:"+payload.length());
-		//System.out.println(payload);
-		//System.out.println(JSONObject.fromObject(request.getHeaderNames()));
-//		Enumeration headerNames = request.getHeaderNames();
-//		while (headerNames.hasMoreElements()) {
-//			String headerName = (String) headerNames.nextElement();
-//			System.out.println(headerName + " : " + request.getHeader(headerName));
-//		}
-//	
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("referer", referer);
+		LogUtil.add(params);
 		
-		String url = "https://translate.googleapis.com/translate_a/t?"+request.getQueryString();
-		Map<String, String> headers = new HashMap<String, String>();
-		headers.put("Content-Type", "application/x-www-form-urlencoded");
-		headers.put("User-Agent", request.getHeader("user-agent"));
-		headers.put("Accept-Language", request.getHeader("accept-language"));
-		headers.put("Connection", "keep-alive");
-		headers.put("Content-Length", request.getHeader("content-length"));
-		headers.put("Accept", "*/*");
-//		headers.put("Accept-Encoding", request.getHeader("accept-encoding"));
-//		headers.put("Accept-Language", request.getHeader("accept-language"));
+		//先从缓存中取
+		String text = payload;
+		String hash = MD5Util.MD5(text);
+		String from = request.getParameter("sl");
+		String to = request.getParameter("tl");
+		Response res = CacheUtil.get(hash, to);
+		if(res == null) {
+			//缓存中没有，那么从api中取
+			
+			String url = "https://translate.googleapis.com/translate_a/t?"+request.getQueryString();
+			Map<String, String> headers = new HashMap<String, String>();
+			headers.put("Content-Type", "application/x-www-form-urlencoded");
+			headers.put("User-Agent", request.getHeader("user-agent"));
+			headers.put("Accept-Language", request.getHeader("accept-language"));
+			headers.put("Connection", "keep-alive");
+			headers.put("Content-Length", request.getHeader("content-length"));
+			headers.put("Accept", "*/*");
+			res = GoogleTranslateUtil.trans(url, payload, request.getHeader("user-agent"), request.getHeader("accept-language"), request.getHeader("content-length"));
+			if(res.getCode() > 199 && res.getCode() < 600) {
+				//有响应，那加入缓存
+				CacheUtil.set(hash, to, res);
+			}
+		}
 		
-//		System.out.println(JSONObject.fromObject(headers));
-		
-		Response res = GoogleTranslateUtil.trans(url, payload, request.getHeader("user-agent"), request.getHeader("accept-language"), request.getHeader("content-length"));
-		//Log.debug(res.getContent());
-        
 		return res.getContent();
 	}
 	
