@@ -20,6 +20,8 @@ import cn.zvo.translate.api.vo.LanguageListVO;
 import cn.zvo.translate.api.vo.TranslateResultVO;
 import cn.zvo.translate.api.vo.bean.LanguageBean;
 import cn.zvo.translate.core.LanguageEnum;
+import cn.zvo.translate.core.service.Language;
+import cn.zvo.translate.core.service.Service;
 import cn.zvo.translate.core.util.CacheUtil;
 import cn.zvo.translate.core.util.GoogleTranslateUtil;
 import net.sf.json.JSONArray;
@@ -42,25 +44,14 @@ public class TranslateController{
 	@ResponseBody
 	@RequestMapping(value="language.json", method = RequestMethod.POST)
 	public LanguageListVO language(HttpServletRequest request) {
-		LanguageListVO vo = new LanguageListVO();
-		List<LanguageBean> list = new ArrayList<LanguageBean>();
-		LanguageEnum[] languages = LanguageEnum.values();
-        for (int i = 0; i < languages.length; i++) {
-        	LanguageBean bean = new LanguageBean();
-        	bean.setId(languages[i].id);
-        	bean.setName(languages[i].name);
-        	list.add(bean);
-        }
-        vo.setList(list);
-		
-        //日志
+		//日志
 		String referer = request.getHeader("referer"); 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("referer", referer);
 		params.put("method", "language.json");
 		LogUtil.add(params);
-        
-		return vo;
+		
+		return Language.getLanguageList();
 	}
 	
 	/**
@@ -110,61 +101,15 @@ public class TranslateController{
 		
 		//先从缓存中取
 		String hash = MD5Util.MD5(text);
-		Response res = CacheUtil.get(hash, to);
-		if(res == null) {
+		vo = CacheUtil.get(hash, to);
+		if(vo == null) {
 			//缓存中没有，那么从api中取
-			res = byApi(from, to, text);
+			vo = Service.serviceInterface.api(Language.currentToService(from).getInfo(), Language.currentToService(to).getInfo(), text);
 			//取出来后加入缓存
-			CacheUtil.set(hash, to, res);
-		}
-		
-		//判断结果，输出
-		if(res.getCode() == 200) {
-			vo.setText(JSONArray.fromObject(res.getContent()));
-		}else {
-			vo.setBaseVO(BaseVO.FAILURE, "error code : "+res.getCode());
+			CacheUtil.set(hash, to, vo);
 		}
 		
 		return vo;
-	}
-	
-	//从接口中取翻译数据数据
-	private Response byApi(String from, String to, String text) {
-		String sl = GoogleTranslateUtil.languageConvert(from);
-		String tl = GoogleTranslateUtil.languageConvert(to);
-		String domain = "translate.googleapis.com";
-		domain = "api.translate.zvo.cn";	//本地调试用
-		String url = "https://"+domain+"/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+sl+"&tl="+tl+"&sp=nmt&tc=1&sr=1&tk=&mode=1";
-		
-		
-		JSONArray array = JSONArray.fromObject(text);
-		StringBuffer payload = new StringBuffer();
-		for (int i = 0; i < array.size(); i++) {
-			if(i > 0) {
-				payload.append("&");
-			}
-			if(from.equalsIgnoreCase(LanguageEnum.CHINESE_SIMPLIFIED.id) || from.equalsIgnoreCase(LanguageEnum.CHINESE_TRADITIONAL.id)) {
-				//简体中文、繁体中文时要用url编码
-				payload.append("q="+StringUtil.stringToUrl(array.getString(i)));
-			}else {
-				payload.append("q="+array.getString(i));
-			}
-		}
-		Response res = null;
-		try {
-			res = GoogleTranslateUtil.trans(url, payload.toString(), null, null, null);
-		} catch (IOException e) {
-			e.printStackTrace();
-			res = new Response();
-			res.code = 0;
-			res.content = e.getMessage();
-			return res;
-		}
-		//Log.debug(res.getContent());
-		
-		//对结果中不合适的地方进行替换
-		res = GoogleTranslateUtil.responseReplace(res);
-		return res;
 	}
 	
 	public static void main(String[] args) throws IOException {

@@ -19,8 +19,11 @@ import com.xnx3.MD5Util;
 import cn.zvo.http.Http;
 import cn.zvo.http.Response;
 import cn.zvo.log.framework.springboot.LogUtil;
+import cn.zvo.translate.api.vo.TranslateResultVO;
 import cn.zvo.translate.core.util.CacheUtil;
 import cn.zvo.translate.core.util.GoogleTranslateUtil;
+import cn.zvo.translate.service.google.Util;
+import net.sf.json.JSONArray;
 
 /**
  * 
@@ -59,8 +62,9 @@ public class GoogleController{
 		String hash = MD5Util.MD5(text);
 		String from = request.getParameter("sl");
 		String to = request.getParameter("tl");
-		Response res = CacheUtil.get(hash, to);
-		if(res == null) {
+		TranslateResultVO vo = CacheUtil.get(hash, to);
+//		Response res = CacheUtil.get(hash, to);
+		if(vo == null) {
 			//缓存中没有，那么从api中取
 			
 			String url = "https://translate.googleapis.com/translate_a/t?"+request.getQueryString();
@@ -71,14 +75,26 @@ public class GoogleController{
 			headers.put("Connection", "keep-alive");
 			headers.put("Content-Length", request.getHeader("content-length"));
 			headers.put("Accept", "*/*");
-			res = GoogleTranslateUtil.trans(url, payload, request.getHeader("user-agent"), request.getHeader("accept-language"), request.getHeader("content-length"));
+			Response res = Util.trans(url, payload, request.getHeader("user-agent"), request.getHeader("accept-language"), request.getHeader("content-length"));
 			if(res.getCode() > 199 && res.getCode() < 600) {
-				//有响应，那加入缓存
-				CacheUtil.set(hash, to, res);
+			}else {
+				res = new Response();
+				res.code = 0;
+				res.content = "code:"+res.getCode()+", content:"+res.getContent();
 			}
+			
+			//组合vo
+			vo.setResult(res.code > 0? TranslateResultVO.SUCCESS:TranslateResultVO.FAILURE);
+			vo.setInfo(res.getContent());
+			vo.setFrom(from);
+			vo.setTo(to);
+			vo.setText(JSONArray.fromObject(res.getContent()));
+			
+			//加入缓存
+			CacheUtil.set(hash, to, vo);
 		}
 		
-		return res.getContent();
+		return vo.getText().toString();
 	}
 	
 	

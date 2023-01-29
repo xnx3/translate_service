@@ -1,9 +1,12 @@
 package cn.zvo.translate.core.util;
 
+import com.xnx3.json.JSONUtil;
+
 import cn.zvo.fileupload.FileUpload;
 import cn.zvo.fileupload.framework.springboot.FileUploadUtil;
 import cn.zvo.fileupload.storage.local.LocalStorage;
 import cn.zvo.http.Response;
+import cn.zvo.translate.api.vo.TranslateResultVO;
 import net.sf.json.JSONObject;
 
 /**
@@ -28,10 +31,10 @@ public class CacheUtil {
 	 * @param language 要翻译的目标语种
 	 * @param response 翻译后的接口响应结果
 	 */
-	public static void set(String hash, String language, Response response) {
+	public static void set(String hash, String language, TranslateResultVO vo) {
 //		com.xnx3.CacheUtil.set(hash+"_"+language, response);
-		response.headerFields = null; //避免序列化失败
-		FileUploadUtil.uploadString(hash+"_"+language+".txt", JSONObject.fromObject(response).toString());
+		//response.headerFields = null; //避免序列化失败
+		FileUploadUtil.uploadString(hash+"_"+language+".txt", JSONObject.fromObject(vo).toString());
 	}
 	
 	/**
@@ -40,17 +43,30 @@ public class CacheUtil {
 	 * @param language 要翻译的目标语种
 	 * @return 如果有，返回 {@link Response} 直接将其返回响应， 如果没有，则返回null
 	 */
-	public static Response get(String hash, String language) {
+	public static TranslateResultVO get(String hash, String language) {
 		//Object obj = com.xnx3.CacheUtil.get(hash+"_"+language);
 		String text = FileUploadUtil.getText(hash+"_"+language+".txt");
 		if(text != null && text.length() > 0) {
 			JSONObject json = JSONObject.fromObject(text);
-			Response res = new Response();
-			res.setCode(json.getInt("code"));
-			if(json.get("content") != null) {
-				res.setContent(json.getString("content"));
+			TranslateResultVO vo = new TranslateResultVO();
+			vo.setResult(JSONUtil.getInt(json, "result"));
+			if(json.get("info") != null) {
+				vo.setInfo(json.getString("info"));
+			}else {
+				vo.setInfo("");
 			}
-			return res;
+			if(vo.getResult() - TranslateResultVO.SUCCESS == 0) {
+				vo.setFrom(JSONUtil.getString(json, "from"));
+				vo.setTo(JSONUtil.getString(json, "to"));
+				vo.setText(json.getJSONArray("text"));
+			}
+			
+//			Response res = new Response();
+//			res.setCode(json.getInt("code"));
+//			if(json.get("content") != null) {
+//				res.setContent(json.getString("content"));
+//			}
+			return vo;
 		}else {
 			return null;
 		}
