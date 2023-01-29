@@ -53,9 +53,12 @@ public class TranslateController{
         }
         vo.setList(list);
 		
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("test", "123");
-        LogUtil.add(params);
+        //日志
+		String referer = request.getHeader("referer"); 
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("referer", referer);
+		params.put("method", "language.json");
+		LogUtil.add(params);
         
 		return vo;
 	}
@@ -130,7 +133,7 @@ public class TranslateController{
 		String sl = GoogleTranslateUtil.languageConvert(from);
 		String tl = GoogleTranslateUtil.languageConvert(to);
 		String domain = "translate.googleapis.com";
-//		domain = "api.translate.zvo.cn";	//本地调试用
+		domain = "api.translate.zvo.cn";	//本地调试用
 		String url = "https://"+domain+"/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+sl+"&tl="+tl+"&sp=nmt&tc=1&sr=1&tk=&mode=1";
 		
 		
