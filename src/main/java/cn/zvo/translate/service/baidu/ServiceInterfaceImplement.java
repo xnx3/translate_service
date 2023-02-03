@@ -33,8 +33,11 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 	@Override
 	public TranslateResultVO api(String from, String to, JSONArray array) {
 		TranslateResultVO vo = new TranslateResultVO();
+		from = Language.currentToService(from).getInfo();
+		to = Language.currentToService(to).getInfo();
 		
-		
+//		application/x-www-form-urlencoded
+//		http.post(to, null, null)
 		
 		
 		
