@@ -34,9 +34,11 @@ public class TranslateResultVO extends BaseVO implements java.io.Serializable{
 	public void setStringText(String text) {
 		this.text = JSONArray.fromObject(text);
 	}
-	
 	@Override
 	public String toString() {
-		return "TranslateResultVO [from=" + from + ", to=" + to + ", text=" + text + "]";
+		return "TranslateResultVO [from=" + from + ", to=" + to + ", text=" + text + ", getResult()=" + getResult()
+				+ ", getInfo()=" + getInfo() + "]";
 	}
+	
+	
 }

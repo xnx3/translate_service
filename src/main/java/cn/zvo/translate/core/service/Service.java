@@ -29,8 +29,8 @@ public class Service implements CommandLineRunner{
 	
 	public static ServiceInterface serviceInterface;
 	static {
-		serviceInterface = new ServiceInterfaceImplement();
-		serviceInterface.setLanguage();
+//		serviceInterface = new ServiceInterfaceImplement();
+//		serviceInterface.setLanguage();
 	}
 
 	public void run(String... args) throws Exception {
@@ -73,12 +73,12 @@ public class Service implements CommandLineRunner{
 				List<Class<?>> logClassList = ScanClassUtil.searchByInterfaceName(classList, "cn.zvo.translate.core.service.interfaces.ServiceInterface");
 				for (int i = 0; i < logClassList.size(); i++) {
 					Class logClass = logClassList.get(i);
-					com.xnx3.Log.debug("log datasource : "+logClass.getName());
+					com.xnx3.Log.debug("translate service : "+logClass.getName());
 					try {
 						Object newInstance = logClass.getDeclaredConstructor(Map.class).newInstance(entry.getValue());
-						ServiceInterface service = (ServiceInterface) newInstance;
-						service.setLanguage(); //初始化设置语种
-						
+						serviceInterface = (ServiceInterface) newInstance;
+						serviceInterface.setLanguage(); //初始化设置语种
+						return;
 					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException| InvocationTargetException  | NoSuchMethodException | SecurityException e) {
 						e.printStackTrace();
 					}

@@ -106,6 +106,9 @@ public class TranslateController{
 			//缓存中没有，那么从api中取
 			JSONArray textArray = JSONArray.fromObject(text);
 			vo = Service.serviceInterface.api(Language.currentToService(from).getInfo(), Language.currentToService(to).getInfo(), textArray);
+			vo.setFrom(from);
+			vo.setTo(to);
+			
 			//取出来后加入缓存
 			CacheUtil.set(hash, to, vo);
 		}
