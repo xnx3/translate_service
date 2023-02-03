@@ -104,7 +104,8 @@ public class TranslateController{
 		vo = CacheUtil.get(hash, to);
 		if(vo == null) {
 			//缓存中没有，那么从api中取
-			vo = Service.serviceInterface.api(Language.currentToService(from).getInfo(), Language.currentToService(to).getInfo(), text);
+			JSONArray textArray = JSONArray.fromObject(text);
+			vo = Service.serviceInterface.api(Language.currentToService(from).getInfo(), Language.currentToService(to).getInfo(), textArray);
 			//取出来后加入缓存
 			CacheUtil.set(hash, to, vo);
 		}

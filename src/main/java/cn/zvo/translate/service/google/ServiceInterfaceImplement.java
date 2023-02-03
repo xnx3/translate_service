@@ -12,21 +12,40 @@ import cn.zvo.translate.core.service.Language;
 import cn.zvo.translate.core.service.interfaces.ServiceInterface;
 import net.sf.json.JSONArray;
 
+/**
+ * 谷歌翻译接口的对接
+ * @author 管雷鸣
+ *
+ */
 public class ServiceInterfaceImplement implements ServiceInterface{
 	static Http http;
 	static {
 		http = new Http();
 	}
-
+	
+	public static void main(String[] args) {
+		ServiceInterfaceImplement service = new ServiceInterfaceImplement();
+		service.setLanguage();
+		
+		JSONArray array = new JSONArray();
+		array.add("你好");
+		array.add("世界");
+		
+		TranslateResultVO vo = service.api("chinese_simplified", "english", array);
+		System.out.println(vo);
+	}
+	
 	@Override
-	public TranslateResultVO api(String from, String to, String text) {
+	public TranslateResultVO api(String from, String to, JSONArray array) {
 		TranslateResultVO vo = new TranslateResultVO();
+		from = Language.currentToService(from).getInfo();
+		to = Language.currentToService(to).getInfo();
 		
 		String domain = "translate.googleapis.com";
 		domain = "api.translate.zvo.cn";	//本地调试用
 		String url = "https://"+domain+"/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+from+"&tl="+to+"&sp=nmt&tc=1&sr=1&tk=&mode=1";
-		
-		JSONArray array = JSONArray.fromObject(text);
+		System.out.println(url);
+//		JSONArray array = JSONArray.fromObject(text);
 		StringBuffer payload = new StringBuffer();
 		for (int i = 0; i < array.size(); i++) {
 			if(i > 0) {
@@ -39,6 +58,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 				payload.append("q="+array.getString(i));
 			}
 		}
+		System.out.println(payload);
 		Response res = null;
 		try {
 			res = trans(url, payload.toString(), null, null, null);
@@ -58,7 +78,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		vo.setInfo(res.getContent());
 		vo.setFrom(from);
 		vo.setTo(to);
-		vo.setText(array);
+		vo.setStringText(res.getContent());
 		
 		//对结果中不合适的地方进行替换
 		vo = responseReplace(vo);

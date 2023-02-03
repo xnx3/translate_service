@@ -1,6 +1,7 @@
 package cn.zvo.translate.core.service.interfaces;
 
 import cn.zvo.translate.api.vo.TranslateResultVO;
+import net.sf.json.JSONArray;
 
 /**
  * 翻译服务。如百度翻译、谷歌翻译
@@ -30,9 +31,9 @@ public interface ServiceInterface {
 	 * 				<li>english : English</li>
 	 * 				<li>...... 具体可传入哪些，还要看该服务api接口支持哪些</li>
 	 * 			</ul>
-	 * @param text 转换的语言json数组，格式如 ["你好","探索星辰大海"] 
+	 * @param textArray 要转换的语言的json数组，传入的如 ["你好","探索星辰大海"] 
 	 * @return 翻译结果
 	 */
-	public TranslateResultVO api(String from, String to, String text);
+	public TranslateResultVO api(String from, String to, JSONArray textArray);
 	
 }
