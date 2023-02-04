@@ -108,6 +108,9 @@ public class TranslateController{
 			vo = Service.serviceInterface.api(Language.currentToService(from).getInfo(), Language.currentToService(to).getInfo(), textArray);
 			vo.setFrom(from);
 			vo.setTo(to);
+			if(vo.getResult() - TranslateResultVO.SUCCESS == 0) {
+				vo.setInfo("SUCCESS");
+			}
 			
 			//取出来后加入缓存
 			CacheUtil.set(hash, to, vo);

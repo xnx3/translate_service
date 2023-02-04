@@ -3,14 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>cn.zvo.translate</groupId>
 	<artifactId>translate</artifactId>
 	<version>1.0</version>
 	<packaging>war</packaging>
 
-	<name>translate</name>
-	<description>translate service</description>
+	<name>translate service</name>
+	<description>translate.js api service</description>
 	<url>https://gitee.com/mail_osc/translate_service</url>
 
 	<licenses>

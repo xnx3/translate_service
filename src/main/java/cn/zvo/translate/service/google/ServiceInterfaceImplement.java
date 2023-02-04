@@ -21,6 +21,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 	static Http http;
 	static {
 		http = new Http();
+		http.setEncode(Http.UTF8);	
 	}
 	
 	public static void main(String[] args) {
@@ -31,34 +32,34 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		array.add("你好");
 		array.add("世界");
 		
-		TranslateResultVO vo = service.api("chinese_simplified", "english", array);
+		TranslateResultVO vo = service.api("zh-CN", "en", array);
 		System.out.println(vo);
 	}
 	
 	@Override
 	public TranslateResultVO api(String from, String to, JSONArray array) {
 		TranslateResultVO vo = new TranslateResultVO();
-		from = Language.currentToService(from).getInfo();
-		to = Language.currentToService(to).getInfo();
+//		from = Language.currentToService(from).getInfo();
+//		to = Language.currentToService(to).getInfo();
 		
 		String domain = "translate.googleapis.com";
 		domain = "api.translate.zvo.cn";	//本地调试用
-		String url = "https://"+domain+"/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+from+"&tl="+to+"&sp=nmt&tc=1&sr=1&tk=&mode=1";
-		System.out.println(url);
+		String url = "https://"+domain+"/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+from+"&tl="+to+"&sp=nmt&tc=1&ctt=1&sr=1&tk=&mode=1";
+		//System.out.println(url);
 //		JSONArray array = JSONArray.fromObject(text);
 		StringBuffer payload = new StringBuffer();
 		for (int i = 0; i < array.size(); i++) {
 			if(i > 0) {
 				payload.append("&");
 			}
-			if(from.equalsIgnoreCase(LanguageEnum.CHINESE_SIMPLIFIED.id) || from.equalsIgnoreCase(LanguageEnum.CHINESE_TRADITIONAL.id)) {
-				//简体中文、繁体中文时要用url编码
+//			if(from.equalsIgnoreCase(LanguageEnum.CHINESE_SIMPLIFIED.id) || from.equalsIgnoreCase(LanguageEnum.CHINESE_TRADITIONAL.id)) {
+//				//简体中文、繁体中文时要用url编码
 				payload.append("q="+StringUtil.stringToUrl(array.getString(i)));
-			}else {
-				payload.append("q="+array.getString(i));
-			}
+//			}else {
+//				payload.append("q="+array.getString(i));
+//			}
 		}
-		System.out.println(payload);
+		//System.out.println(payload);
 		Response res = null;
 		try {
 			res = trans(url, payload.toString(), null, null, null);
@@ -76,8 +77,6 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		//组合vo
 		vo.setResult(res.code > 0? TranslateResultVO.SUCCESS:TranslateResultVO.FAILURE);
 		vo.setInfo(res.getContent());
-		vo.setFrom(from);
-		vo.setTo(to);
 		vo.setStringText(res.getContent());
 		
 		//对结果中不合适的地方进行替换
@@ -150,6 +149,18 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 					//存在，过滤，将其替换
 					String text = array.getString(i);
 					text = text.replaceAll("&amp;", "&");
+					array.set(i, text);
+					
+					update = true;
+				}
+			}
+    		
+    		//遍历 &quot; 的问题
+    		for (int i = 0; i < array.size(); i++) {
+				if(array.getString(i).indexOf("&quot;") > -1) {
+					//存在，过滤，将其替换
+					String text = array.getString(i);
+					text = text.replaceAll("&quot;", "\"");
 					array.set(i, text);
 					
 					update = true;

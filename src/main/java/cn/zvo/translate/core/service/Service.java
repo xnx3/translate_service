@@ -3,16 +3,11 @@ package cn.zvo.translate.core.service;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import com.xnx3.Lang;
 import com.xnx3.ScanClassUtil;
-
-import cn.zvo.log.framework.springboot.Log;
 import cn.zvo.translate.core.service.interfaces.ServiceInterface;
 import cn.zvo.translate.service.google.ServiceInterfaceImplement;
 
@@ -26,17 +21,13 @@ import cn.zvo.translate.service.google.ServiceInterfaceImplement;
 public class Service implements CommandLineRunner{
 	@Resource
 	private ApplicationConfig translateServiceApplicationConfig;
-	
+	//当前使用的翻译服务
 	public static ServiceInterface serviceInterface;
-	static {
-//		serviceInterface = new ServiceInterfaceImplement();
-//		serviceInterface.setLanguage();
-	}
 
 	public void run(String... args) throws Exception {
 		com.xnx3.Log.debug("load translate config by application.properties / yml : "+this.translateServiceApplicationConfig);
 		if(translateServiceApplicationConfig == null) {
-			System.err.println("请配置 translate.service.xxx.xxx 设置");
+			System.err.println("未发现application配置");
 			return;
 		}
     	loadConfig(this.translateServiceApplicationConfig); //加载application配置
@@ -84,6 +75,10 @@ public class Service implements CommandLineRunner{
 					}
 				}
 			}
+		}else {
+			System.out.println("未配置 translate.service.xxx.xxx ，使用默认的google翻译");
+			serviceInterface = new ServiceInterfaceImplement();
+			serviceInterface.setLanguage();
 		}
     }
 	
