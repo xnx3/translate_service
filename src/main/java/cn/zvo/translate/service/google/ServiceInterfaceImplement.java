@@ -43,7 +43,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 //		to = Language.currentToService(to).getInfo();
 		
 		String domain = "translate.googleapis.com";
-		domain = "api.translate.zvo.cn";	//本地调试用
+//		domain = "api.translate.zvo.cn";	//本地调试用
 		String url = "https://"+domain+"/translate_a/t?anno=3&client=te&format=html&v=1.0&key&logld=vTE_20200210_00&sl="+from+"&tl="+to+"&sp=nmt&tc=1&ctt=1&sr=1&tk=&mode=1";
 		//System.out.println(url);
 //		JSONArray array = JSONArray.fromObject(text);
@@ -77,7 +77,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		//组合vo
 		vo.setResult(res.code > 0? TranslateResultVO.SUCCESS:TranslateResultVO.FAILURE);
 		vo.setInfo(res.getContent());
-		vo.setStringText(res.getContent());
+		vo.setText(JSONArray.fromObject(res.getContent()));
 		
 		//对结果中不合适的地方进行替换
 		vo = responseReplace(vo);

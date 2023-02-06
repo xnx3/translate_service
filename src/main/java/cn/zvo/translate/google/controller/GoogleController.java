@@ -65,6 +65,7 @@ public class GoogleController{
 		TranslateResultVO vo = CacheUtil.get(hash, to);
 //		Response res = CacheUtil.get(hash, to);
 		if(vo == null) {
+			vo = new TranslateResultVO();
 			//缓存中没有，那么从api中取
 			
 			String url = "https://translate.googleapis.com/translate_a/t?"+request.getQueryString();
