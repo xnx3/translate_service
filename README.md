@@ -29,7 +29,7 @@ wget https://gitee.com/mail_osc/translate_service/raw/master/install/install.sh 
 在 ````translate.execute();```` 之前，加入一行代码，如下所示：
 
 ````
-translate.apiHost='http://121.121.121.121/'; //将这里面的ip地址换成你服务器的ip，注意开头，及结尾还有个 / 别拉下
+translate.request.api.host='http://121.121.121.121/'; //将这里面的ip地址换成你服务器的ip，注意开头，及结尾还有个 / 别拉下
 translate.execute();
 ````
 
