@@ -41,3 +41,21 @@ translate.execute();
 比如可以使用华为云的全站加速服务，然后在此服务中配置SSL证书使之支持https  
 将http变为https方式很多，这里只是提的一种比较方便的方式，其他具体的可以自行尝试，也或者我们出技术人员帮您操作，收几百人工费。
 
+# 扩展
+可对接任意的翻译接口进行非常方便的扩展。比如百度翻译、华为云翻译、谷歌翻译、以及对接开源翻译引擎等等。  
+扩展时，有以下几点需要注意：
+1. 将扩展的翻译服务对接的实现，都要放到 cn.zvo.translate.service 这个包下。比如对接华为云翻译，那就建立一个 cn.zvo.translate.service 包，在这个包下建立一个名为 ServiceInterfaceImplement.java 的类
+2. ServiceInterfaceImplement 要实现 cn.zvo.translate.core.service.interfaces.ServiceInterface 接口
+3. 在跟翻译服务对接时，网络请求这块使用 cn.zvo.http.Http 这个，其使用说明参见 [https://github.com/xnx3/http.java](https://github.com/xnx3/http.java),  这样不至于引入很多杂七杂八的支持包进去。当然如果单纯就只是你自己用，你可以直接吧对方SDK，通过修改 pom.xml 中加入，来引入一堆的三方jar包。  
+4. 要有一个构造方法，构造方法需要传入Map，具体代码如下
+````
+public ServiceInterfaceImplement(Map<String, String> config) {
+	//可以使用 config.get('username') 获取 application.peroperties 中设置的 translate.service.huawei.username 的值
+}
+````
+5. application.peroperties 中的配置项，按照上面所示的 translate.service.huawei.username ，其中:  
+	1. translate.service 是固定的，
+	1. huawei 是在 cn.zvo.translate.service 包下所建立的针对华为云翻译所建立的包名
+	1. username 是自己定义的一个参数名，这里叫username，那么在 ServiceInterfaceImplement 的构造方法中获取时，也要用 config.get("username") 来取
+  
+这里已内置了两个翻译服务的对接示例，一个是google翻译、一个是华为云翻译，可以参考华为云翻译的实现 cn.zvo.translate.service.huawei.ServiceInterfaceImplement.java
