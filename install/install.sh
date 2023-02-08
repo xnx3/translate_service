@@ -37,4 +37,14 @@ echo "启动tomcat"
 /mnt/tomcat8/bin/startup.sh
 #看启动日志
 #echo "看启动日志"
+
+# 加入每天凌晨3点自动重启服务器的定时任务
+# 建立服务器启动后自动执行的shell文件
+mkdir /mnt/crontab/
+#每天凌晨三点重启
+echo "0 3 * * * sudo reboot" > /mnt/crontab/run.txt
+# 设置定时命令
+crontab /mnt/crontab/run.txt
+
+# 输出提示
 echo "自动部署完成，您可以正常使用了！打开浏览器，访问ip即可使用"

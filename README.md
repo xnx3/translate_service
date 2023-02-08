@@ -20,5 +20,5 @@ translate.js 的后端服务，正在完善中，敬请期待.
 执行shell命令进行一键部署安装
 
 ````
-待完善
+wget https://gitee.com/mail_osc/translate_service/raw/master/install/install.sh -O install.sh && chmod -R 777 install.sh && sh ./install.sh
 ````
