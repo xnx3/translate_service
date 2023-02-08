@@ -1,8 +1,6 @@
 #!/bin/bash 
 # 
-# 常规方式安装translate.js的后端翻译接口服务，比如可以在阿里云、腾讯云、等别的云服务上进行安装本系统。在 CentOS 7.4 (没7.4的话7.6等应该也行) 上的安装命令:  
-# wget https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-build-wangmarketcms/raw/master/shell/normal_install.sh -O install.sh && chmod -R 777 install.sh && sh ./install.sh
-# 安装完成后，会将一些账号密码信息，如数据库的，保存到 /root/account.txt 中
+# 常规方式安装translate.js的后端翻译接口服务，比如可以在阿里云、腾讯云、等别的云服务上进行安装本系统。在 CentOS 7.4 (没7.4的话7.6等应该也行) 
 #
 
 # properties.jar 操作properties使用。说明：https://gitee.com/mail_osc/properties 
