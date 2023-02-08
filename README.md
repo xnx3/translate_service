@@ -1,6 +1,6 @@
 translate.js 的后端服务，正在完善中，敬请期待.
 
-# 线上部署
+# 部署
 ### 1. 购买服务器
 
 * 核心：1核
@@ -22,3 +22,14 @@ translate.js 的后端服务，正在完善中，敬请期待.
 ````
 wget https://gitee.com/mail_osc/translate_service/raw/master/install/install.sh -O install.sh && chmod -R 777 install.sh && sh ./install.sh
 ````
+
+# 使用
+
+在 ````translate.execute();```` 之前，加入一行代码，如下所示：
+
+````
+translate.apiHost='http://121.121.121.121/'; //将这里面的ip地址换成你服务器的ip，注意开头，及结尾还有个 / 别拉下
+translate.execute();
+````
+
+如此，翻译请求接口就会走您自己服务器了。
