@@ -5,29 +5,32 @@
 # 安装完成后，会将一些账号密码信息，如数据库的，保存到 /root/account.txt 中
 #
 
-# 应用包下载地址 
-export appDownUrl=http://down.zvo.cn/wangmarket/version/v5.7/wangmarket-5.7.zip
+# properties.jar 操作properties使用。说明：https://gitee.com/mail_osc/properties 
+export propertiesDownUrl=http://down.zvo.cn/properties/properties-1.0.1.jar
 
-# 加载资源文件下载路径
-cd ~
-wget https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-build-wangmarketcms/raw/master/shell/file.sh -O file.sh
-chmod -R 777 file.sh
-source ./file.sh
-echo "加载资源文件下载路径完毕"
 
 ##### JDK、Tomcat安装开始####
 wget https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-build-wangmarketcms/raw/master/shell/tomcat.sh -O tomcat.sh
-chmod -R 777 file.sh
+chmod -R 777 tomcat.sh
 source ./tomcat.sh
 echo "加载tomcat.sh完毕"
 ##### JDK、Tomcat安装结束####
 
-# 删除 file.sh 、mysql.sh 等通用模块
-rm -rf /root/file.sh
-rm -rf /root/mysql.sh
-rm -rf /root/tomcat.sh
-rm -rf /root/wangmarket.sh
+####### 安装应用包 #########
+cd /mnt/tomcat8/webapps/ROOT/
+wget https://mail_osc.gitee.io/translate_service/install/translate.war -O translate.war
+unzip translate.war
+rm -rf translate.war
 
+
+# 初始化创建相关文件夹
+mkdir /mnt/tomcat8/fileupload/
+# 设置application.properties配置
+java -cp ~/properties.jar Properties -path=/mnt/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties -set log.datasource.file.path=/mnt/tomcat8/logs/
+java -cp ~/properties.jar Properties -path=/mnt/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties -set fileupload.storage.local.path=/mnt/tomcat8/fileupload/
+
+# 删除 tomcat.sh 等通用模块
+rm -rf /root/tomcat.sh
 systemctl stop firewalld.service
 # 启动tomcat
 echo "启动tomcat"
