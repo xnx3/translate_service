@@ -3,13 +3,12 @@ package cn.zvo.translate.service.google;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import com.xnx3.StringUtil;
 import cn.zvo.http.Http;
 import cn.zvo.http.Response;
 import cn.zvo.translate.api.vo.TranslateResultVO;
-import cn.zvo.translate.core.LanguageEnum;
 import cn.zvo.translate.core.service.Language;
 import cn.zvo.translate.core.service.interfaces.ServiceInterface;
+import cn.zvo.translate.core.util.StringUtil;
 import net.sf.json.JSONArray;
 
 /**
@@ -63,24 +62,26 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		Response res = null;
 		try {
 			res = trans(url, payload.toString(), null, null, null);
+			if(res.getCode() == 200) {
+				//成功
+				
+				vo.setResult(TranslateResultVO.SUCCESS);
+				vo.setInfo("SUCCESS");
+				vo.setText(JSONArray.fromObject(res.getContent()));
+				
+				//对结果中不合适的地方进行替换
+				vo = responseReplace(vo);
+			}else {
+				vo.setResult(TranslateResultVO.SUCCESS);
+				vo.setInfo("translate service response error , http code : "+res.getCode());
+				vo.setText(array);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			res = new Response();
-			res.code = 0;
-			res.content = e.getMessage();
-//			return res;
+			vo.setResult(TranslateResultVO.SUCCESS);
+			vo.setInfo("translate service response error");
+			vo.setText(array);
 		}
-		
-		//Log.debug(res.getContent());
-		
-		
-		//组合vo
-		vo.setResult(res.code > 0? TranslateResultVO.SUCCESS:TranslateResultVO.FAILURE);
-		vo.setInfo(res.getContent());
-		vo.setText(JSONArray.fromObject(res.getContent()));
-		
-		//对结果中不合适的地方进行替换
-		vo = responseReplace(vo);
 		
 		return vo;
 	}
