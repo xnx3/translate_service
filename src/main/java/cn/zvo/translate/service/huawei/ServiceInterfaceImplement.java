@@ -62,7 +62,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		service.setLanguage();
 
 		JSONArray array = new JSONArray();
-		array.add("你,好");
+		array.add("你好");
 		array.add("世界");
 
 		TranslateResultVO vo = service.api("zh", "en", array);
@@ -79,7 +79,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		payload.append(array.get(0));
 		if (array.size() > 1) {
 			for (int i = 1; i < array.size(); i++) {
-				payload.append("," + array.get(i));
+				payload.append("\n" + array.get(i));
 			}
 		}
 		String sourceText = payload.toString();
@@ -152,9 +152,10 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 				while (br.ready()) {
 					JSONObject fromObject = JSONObject.fromObject(br.readLine());
 					String string = fromObject.getString("translated_text");
+					System.out.println(string);
 					// 中文逗号转成英文的
-					String text = string.replace("，", ",").replace(" ", "");
-					String[] texts = text.split(",");
+//					String text = string.replace("，", ",").replace(" ", "");
+					String[] texts = string.split("\n");
 
 					vo.setText(JSONArray.fromObject(texts));
 					vo.setFrom(from);
