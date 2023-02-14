@@ -100,7 +100,7 @@ public class TranslateController{
 		LogUtil.add(params);
 		
 		//先从缓存中取
-		String hash = MD5Util.MD5(text);
+		String hash = MD5Util.MD5(from+"_"+to+"_"+text);
 		vo = CacheUtil.get(hash, to);
 		if(vo == null) {
 			//缓存中没有，那么从api中取

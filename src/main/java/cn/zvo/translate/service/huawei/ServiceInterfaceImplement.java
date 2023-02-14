@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import cn.zvo.http.Http;
 import cn.zvo.http.Response;
 import cn.zvo.translate.api.vo.TranslateResultVO;
@@ -72,8 +71,47 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 	@Override
 	public TranslateResultVO api(String from, String to, JSONArray array) {
 		TranslateResultVO vo = new TranslateResultVO();
+		vo.setText(new JSONArray());
 		from = "auto";
+		
+		List<JSONArray> list = cn.zvo.translate.core.util.JSONUtil.split(array, 2000); //长度不能超过2000字符，所以针对2000进行截取
+		for (int i = 0; i < list.size(); i++) {
+			TranslateResultVO vf = requestApi(from, to, list.get(i));
+			if(vf.getResult() - TranslateResultVO.FAILURE == 0) {
+				return vf;
+			}
+//			System.out.println(i+", "+vf.toString());
+			
+			vo.getText().addAll(vf.getText());
+		}
+		
+		return vo;
+	}
 
+	@Override
+	public void setLanguage() {
+
+		/*
+		 * 向语种列表中追加支持的语种，以下注意只需要改第二个参数为对接的翻译服务中，人家的api语种标识即可
+		 */
+		Language.append("chinese_simplified", "zh", "简体中文");
+		Language.append("chinese_traditional", "zh-tw", "繁體中文");
+		Language.append("english", "en", "English");
+		Language.append("korean", "ko", "한어");
+		Language.append("arabic", "ar", "بالعربية");	//阿拉伯语
+		Language.append("german", "de", "Deutsch");	//德语
+		Language.append("french", "fr", "Français");	//法语
+		Language.append("portuguese", "pt", "Português");	//葡萄牙语
+		Language.append("japanese", "ja", "日本語");	//日语
+		Language.append("thai", "th", "ภาษาไทย");	//泰语
+		Language.append("turkish", "tr", "Türkçe");	//土耳其语
+		Language.append("spanish", "es", "Español");	//西班牙语
+		Language.append("vietnamese", "vi", "Tiếng Việt");	//越南语
+	}
+
+	private TranslateResultVO requestApi(String from, String to, JSONArray array) {
+		TranslateResultVO vo = new TranslateResultVO();
+		
 		//要翻译的原字符串
 		StringBuffer payload = new StringBuffer();
 		payload.append(array.get(0));
@@ -83,6 +121,8 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 			}
 		}
 		String sourceText = payload.toString();
+		//System.out.println(sourceText);
+		//System.out.println(sourceText.length());
 
 		//header
 		Map<String, String> headers = new HashMap<String, String>();
@@ -152,9 +192,9 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 				while (br.ready()) {
 					JSONObject fromObject = JSONObject.fromObject(br.readLine());
 					String string = fromObject.getString("translated_text");
-					System.out.println(string);
+					//System.out.println(string);
 					// 中文逗号转成英文的
-//					String text = string.replace("，", ",").replace(" ", "");
+//							String text = string.replace("，", ",").replace(" ", "");
 					String[] texts = string.split("\n");
 
 					vo.setText(JSONArray.fromObject(texts));
@@ -171,41 +211,41 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 				
 				
 				
-//				//TODO 方法② 文本翻译
-//				JSONObject resBody = new JSONObject();
-//				resBody.put("text", sourceText);
-//				resBody.put("from", from);
-//				resBody.put("to", to);
-//				String body = resBody.toString();
-//				
-//				System.err.println("string   "+body);
-//				
-//				// 添加token
-//				headers.put("X-Auth-Token", token);
-//				headers.put("Content-Type", "application/json");
-//				
-//				
-//				Response fanyiResponse = http.post(TRANS_API_URL, body , headers);
-//				JSONObject result = JSONObject.fromObject(fanyiResponse.getContent());
+//						//TODO 方法② 文本翻译
+//						JSONObject resBody = new JSONObject();
+//						resBody.put("text", sourceText);
+//						resBody.put("from", from);
+//						resBody.put("to", to);
+//						String body = resBody.toString();
+//						
+//						System.err.println("string   "+body);
+//						
+//						// 添加token
+//						headers.put("X-Auth-Token", token);
+//						headers.put("Content-Type", "application/json");
+//						
+//						
+//						Response fanyiResponse = http.post(TRANS_API_URL, body , headers);
+//						JSONObject result = JSONObject.fromObject(fanyiResponse.getContent());
 //
-//				System.err.println("result   "+result);
-//				
-//				if (fanyiResponse.getCode() == 200) {
-//					if(result == null) {
-//						//接口响应出现了错误码
-//						vo.setBaseVO(TranslateResultVO.FAILURE, response.getContent());
-//					}else {
-//						//成功
-////						Object resultArray = result.getJSONArray("translated_text");
-////						vo.setText((JSONArray)resultArray);
-//						vo.setFrom(from);
-//						vo.setTo(to);
-//						vo.setBaseVO(TranslateResultVO.SUCCESS, "SUCCESS");
-//					}
-//				}else {
-//					//http没有正常响应
-//					vo.setBaseVO(TranslateResultVO.FAILURE, "http response code : " + fanyiResponse.getCode()+", content: "+ fanyiResponse.getContent());
-//				}
+//						System.err.println("result   "+result);
+//						
+//						if (fanyiResponse.getCode() == 200) {
+//							if(result == null) {
+//								//接口响应出现了错误码
+//								vo.setBaseVO(TranslateResultVO.FAILURE, response.getContent());
+//							}else {
+//								//成功
+////								Object resultArray = result.getJSONArray("translated_text");
+////								vo.setText((JSONArray)resultArray);
+//								vo.setFrom(from);
+//								vo.setTo(to);
+//								vo.setBaseVO(TranslateResultVO.SUCCESS, "SUCCESS");
+//							}
+//						}else {
+//							//http没有正常响应
+//							vo.setBaseVO(TranslateResultVO.FAILURE, "http response code : " + fanyiResponse.getCode()+", content: "+ fanyiResponse.getContent());
+//						}
 				
 				
 				
@@ -221,21 +261,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 			e.printStackTrace();
 			vo.setBaseVO(TranslateResultVO.FAILURE, e.getMessage());
 		}
-
+		
 		return vo;
 	}
-
-	@Override
-	public void setLanguage() {
-
-		/*
-		 * 向语种列表中追加支持的语种，以下注意只需要改第二个参数为对接的翻译服务中，人家的api语种标识即可
-		 */
-
-		Language.append("english", "en", "English");
-		Language.append("chinese_simplified", "zh", "简体中文");
-		Language.append("chinese_traditional", "zh-tw", "繁體中文");
-		Language.append("korean", "ko", "한어");
-	}
-
 }
