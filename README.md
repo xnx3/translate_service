@@ -41,6 +41,29 @@ translate.execute();
 
 如此，翻译请求接口就会走您自己服务器了。
 
+# 扩展-采用华为云翻译提供翻译服务
+
+进入华为云翻译的控制台，网址： [https://console.huaweicloud.com/nlp/#/nlp/call-guide/call-api](https://console.huaweicloud.com/nlp/#/nlp/call-guide/call-api) 
+![](https://cdn.weiunity.com/site/341/news/64da512a4a8746b8938ee90aacd89bf4.png)  
+获取到 Token 认证中的 username、domainname、projectname 的值，然后填入
+上面命令安装完成后，可以执行以下命令进行设置使用华为云翻译  
+注意，下面的username、domainname、projectname、password这四个参数请填上你当前自己的参数。  
+
+````
+# 将上面获取到的 username、domainname、projectname 的值填入
+export username=hw012345678
+export domainname=hw012345678
+export projectname=cn-north-4
+# 你当前华为云账号登录的密码
+export password=1234567890
+# 注意 ，请将上面四个参数填上你当前的参数。
+# 
+
+cd ~
+wget https://gitee.com/mail_osc/translate_service/raw/master/install/huaweicloud_config.sh -O huaweicloud_config.sh && chmod -R 777 huaweicloud_config.sh && sh ./huaweicloud_config.sh
+````
+运行后完成设置，等待两分钟重启服务，然后测试一下，完成。
+
 # 其他
 ### https场景
 如果你网站使用的是https协议，那翻译接口你也要变为https协议，不然会请求不到。  

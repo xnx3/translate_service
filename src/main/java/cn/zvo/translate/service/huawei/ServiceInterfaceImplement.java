@@ -31,30 +31,31 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 	private static final String TOKEN_API_URL = "https://iam.myhuaweicloud.com/v3/auth/tokens?nocatalog=true";
 	// 文本翻译请求地址
 	private static final String TRANS_API_URL = "https://nlp-ext.cn-north-4.myhuaweicloud.com/v1/07cca648b08025d52f8fc00a2dc61e61/machine-translation/text-translation";
-
-	// 用户所属帐号名
-	private String userAccount;
-	// 用户名
-	private String userName;
+	
+	//通过 https://console.huaweicloud.com/nlp/#/nlp/call-guide/call-api 获取
+	//用户名
+	private String username;
+	//账户名
+	private String domainname;
 	// 用户密码
-	private String pwd;
-	// 项目名称,cn-north-1
-	private String project;
+	private String password;
+	//需与NLP服务终端节点中的区域保持一致 比如这里填写 cn-north-4
+	private String projectname;
 
 	public ServiceInterfaceImplement(Map<String, String> config) {
-		this.userAccount = config.get("userAccount");
-		this.userName = config.get("userName");
-		this.pwd = config.get("pwd");
-		this.project = config.get("project");
+		this.username = config.get("username");
+		this.domainname = config.get("domainname");
+		this.password = config.get("password");
+		this.projectname = config.get("projectname");
 	}
 
 
 	public static void main(String[] args) {
 
 		Map<String, String> config = new HashMap<String, String>();
-		config.put("userAccount", "hw5xxxxxx");
-		config.put("userName", "hw5xxxxxx");
-		config.put("pwd", "xxxxxxxx");
+		config.put("username", "hw5xxxxxx");
+		config.put("domainname", "hw5xxxxxx");
+		config.put("password", "xxxxxxxx");
 		config.put("project", "cn-north-4");
 
 		ServiceInterfaceImplement service = new ServiceInterfaceImplement(config);
@@ -137,18 +138,18 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		JSONObject userJsonObject = new JSONObject();
 		// IAM用户所属帐号名
 		JSONObject nameObject = new JSONObject();
-		nameObject.put("name", this.userAccount);
+		nameObject.put("name", this.username);
 
 		userJsonObject.put("domain", nameObject);
-		userJsonObject.put("name", this.userName);
-		userJsonObject.put("password", this.pwd);
+		userJsonObject.put("name", this.domainname);
+		userJsonObject.put("password", this.password);
 		passwordObject.put("user", userJsonObject);
 		identityObject.put("password", passwordObject);
 		authObject.put("identity", identityObject);
 
 		JSONObject scopeObject = new JSONObject();
 		JSONObject pnameObject = new JSONObject();
-		pnameObject.put("name", this.project);
+		pnameObject.put("name", this.projectname);
 		scopeObject.put("project", pnameObject);
 		authObject.put("scope", scopeObject);
 
