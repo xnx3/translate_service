@@ -56,7 +56,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		config.put("username", "hw5xxxxxx");
 		config.put("domainname", "hw5xxxxxx");
 		config.put("password", "xxxxxxxx");
-		config.put("project", "cn-north-4");
+		config.put("projectname", "cn-north-4");
 
 		ServiceInterfaceImplement service = new ServiceInterfaceImplement(config);
 		service.setLanguage();
