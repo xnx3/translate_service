@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.xnx3.BaseVO;
+import com.xnx3.DateUtil;
 import com.xnx3.MD5Util;
 import com.xnx3.StringUtil;
 import cn.zvo.http.Response;
@@ -49,6 +50,7 @@ public class TranslateController{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("referer", referer);
 		params.put("method", "language.json");
+		params.put("time", DateUtil.currentDate("yyyy-MM-dd HH:mm:ss"));
 		LogUtil.add(params);
 		
 		return Language.getLanguageList();
@@ -97,6 +99,7 @@ public class TranslateController{
 		String referer = request.getHeader("referer"); 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("referer", referer);
+		params.put("time", DateUtil.currentDate("yyyy-MM-dd HH:mm:ss"));
 		LogUtil.add(params);
 		
 		//先从缓存中取
