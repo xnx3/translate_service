@@ -41,13 +41,18 @@ translate.execute();
 
 如此，翻译请求接口就会走您自己服务器了。
 
-# 扩展-采用华为云翻译提供翻译服务
+# 扩展
+### https场景
+如果你网站使用的是https协议，那翻译接口你也要变为https协议，不然会请求不到。  
+比如可以使用华为云的全站加速服务，然后在此服务中配置SSL证书使之支持https  
+将http变为https方式很多，这里只是提的一种比较方便的方式，其他具体的可以自行尝试，也或者我们出技术人员帮您操作，收几百人工费。
 
+### 采用华为云翻译提供翻译服务
+首先，您要通过上面命令已安装部署好。  
 进入华为云翻译的控制台，网址： [https://console.huaweicloud.com/nlp/#/nlp/call-guide/call-api](https://console.huaweicloud.com/nlp/#/nlp/call-guide/call-api) 
 ![](https://cdn.weiunity.com/site/341/news/64da512a4a8746b8938ee90aacd89bf4.png)  
-获取到 Token 认证中的 username、domainname、projectname 的值，然后填入
-上面命令安装完成后，可以执行以下命令进行设置使用华为云翻译  
-注意，下面的username、domainname、projectname、password这四个参数请填上你当前自己的参数。  
+获取到 Token 认证中的 username、domainname、projectname 的值
+然后将下面的username、domainname、projectname、password这四个参数请填上你当前自己的参数。  
 
 ````
 # 将上面获取到的 username、domainname、projectname 的值填入
@@ -64,13 +69,7 @@ wget https://gitee.com/mail_osc/translate_service/raw/master/install/huaweicloud
 ````
 运行后完成设置，等待两分钟重启服务，然后测试一下，完成。
 
-# 其他
-### https场景
-如果你网站使用的是https协议，那翻译接口你也要变为https协议，不然会请求不到。  
-比如可以使用华为云的全站加速服务，然后在此服务中配置SSL证书使之支持https  
-将http变为https方式很多，这里只是提的一种比较方便的方式，其他具体的可以自行尝试，也或者我们出技术人员帮您操作，收几百人工费。
-
-# 扩展
+### 其他翻译服务的接入
 可对接任意的翻译接口进行非常方便的扩展。比如百度翻译、华为云翻译、谷歌翻译、以及对接开源翻译引擎等等。  
 扩展时，有以下几点需要注意：
 1. 将扩展的翻译服务对接的实现，都要放到 cn.zvo.translate.service 这个包下。比如对接华为云翻译，那就建立一个 cn.zvo.translate.service 包，在这个包下建立一个名为 ServiceInterfaceImplement.java 的类
