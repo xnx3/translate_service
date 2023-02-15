@@ -14,7 +14,7 @@ import com.xnx3.version.VersionVO;
 public class Version {
 	
 	//版本检测提醒
-	public static final String VERSION = "1.0"; //当前版本
+	public static final String VERSION = "2.2"; //当前版本
 	static {
 		VersionVO v = VersionUtil.cloudContrast("http://version.zvo.cn/translateService.html", VERSION);
 		if(v.isFindNewVersion()) {
