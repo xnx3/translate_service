@@ -215,6 +215,7 @@ public class ServiceInterfaceImplement implements ServiceInterface{
 		Language.append("portuguese", "pt", "Português");	//葡萄牙语
 		Language.append("thai", "th", "ภาษาไทย");	//泰语
 		Language.append("turkish", "tr", "Türkçe");	//土耳其语
+		Language.append("vietnamese", "vi", "Tiếng Việt");	//越南语
 	}
 	
 }
